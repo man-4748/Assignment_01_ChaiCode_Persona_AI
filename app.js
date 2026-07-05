@@ -1,13 +1,7 @@
-// Main Application Logic for the AI Persona Chat Simulator
 
-// ==========================================
-// 🚀 DEPLOYMENT CONFIGURATIONS (Hardcode keys here)
-// ==========================================
-const GEMINI_API_KEY = ""; // Paste your Google Gemini API Key here
-const OPENAI_API_KEY = ""; // Paste your OpenAI API Key here
-// ==========================================
+const GEMINI_API_KEY = "";
+const OPENAI_API_KEY = "";
 
-// State variables
 let activePersona = 'hitesh';
 let chatHistories = {
   hitesh: [],
@@ -25,14 +19,12 @@ let settings = {
   }
 };
 
-// Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
   initUI();
   switchPersona('hitesh');
 });
 
-// Load settings from localStorage
 function loadSettings() {
   const savedSettings = localStorage.getItem('chaicode_simulator_settings');
   if (savedSettings) {
@@ -44,7 +36,6 @@ function loadSettings() {
     }
   }
 
-  // Load customized prompts if not set
   if (!settings.customPrompts.hitesh) {
     settings.customPrompts.hitesh = PERSONAS.hitesh.systemPrompt;
   }
@@ -52,7 +43,6 @@ function loadSettings() {
     settings.customPrompts.piyush = PERSONAS.piyush.systemPrompt;
   }
 
-  // Load chat histories from localStorage
   const savedHistoryHitesh = localStorage.getItem('chaicode_history_hitesh');
   const savedHistoryPiyush = localStorage.getItem('chaicode_history_piyush');
   if (savedHistoryHitesh) {
@@ -63,19 +53,16 @@ function loadSettings() {
   }
 }
 
-// Save settings to localStorage
 function saveSettings() {
   localStorage.setItem('chaicode_simulator_settings', JSON.stringify(settings));
 }
 
-// Save chat histories to localStorage
 function saveChatHistory(personaId) {
   localStorage.setItem(`chaicode_history_${personaId}`, JSON.stringify(chatHistories[personaId]));
 }
 
-// UI Elements & Event Listeners setup
 function initUI() {
-  // Elements
+
   const hiteshCard = document.getElementById('persona-card-hitesh');
   const piyushCard = document.getElementById('persona-card-piyush');
   const chatInput = document.getElementById('chat-input');
@@ -86,27 +73,22 @@ function initUI() {
   const clearChatBtn = document.getElementById('clear-chat-btn');
   const saveSettingsBtn = document.getElementById('save-settings-btn');
 
-  // Setup settings fields value
   document.getElementById('api-provider').value = settings.provider;
   document.getElementById('gemini-key').value = settings.geminiKey;
   document.getElementById('openai-key').value = settings.openaiKey;
   document.getElementById('gemini-model').value = settings.geminiModel;
   document.getElementById('openai-model').value = settings.openaiModel;
-  
-  // Toggle model visibility based on selected provider
+
   toggleProviderFields(settings.provider);
 
-  // Event Listeners
   hiteshCard.addEventListener('click', () => switchPersona('hitesh'));
   piyushCard.addEventListener('click', () => switchPersona('piyush'));
 
-  // Auto-resize textarea
   chatInput.addEventListener('input', function() {
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight - 4) + 'px';
   });
 
-  // Handle enter key in input
   chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -116,7 +98,6 @@ function initUI() {
 
   sendBtn.addEventListener('click', handleSendMessage);
 
-  // Settings drawer controls
   configBtn.addEventListener('click', () => {
     settingsDrawer.classList.add('open');
   });
@@ -129,7 +110,6 @@ function initUI() {
     toggleProviderFields(e.target.value);
   });
 
-  // Save Settings Button
   saveSettingsBtn.addEventListener('click', () => {
     settings.provider = document.getElementById('api-provider').value;
     settings.geminiKey = document.getElementById('gemini-key').value.trim();
@@ -142,7 +122,6 @@ function initUI() {
     settingsDrawer.classList.remove('open');
   });
 
-  // Clear Chat History Button
   clearChatBtn.addEventListener('click', () => {
     if (confirm(`Are you sure you want to clear the conversation history with ${PERSONAS[activePersona].name}?`)) {
       chatHistories[activePersona] = [];
@@ -154,7 +133,6 @@ function initUI() {
 
 }
 
-// Toggle UI inputs depending on Gemini or OpenAI selection
 function toggleProviderFields(provider) {
   const geminiFields = document.getElementById('gemini-fields');
   const openaiFields = document.getElementById('openai-fields');
@@ -167,37 +145,29 @@ function toggleProviderFields(provider) {
   }
 }
 
-// Switch Active Persona
 function switchPersona(personaId) {
   activePersona = personaId;
   const p = PERSONAS[personaId];
 
-  // Update Body Theme Class
   document.body.className = '';
   document.body.classList.add(p.themeClass);
 
-  // Update Active Persona Switch Card Styling
   document.querySelectorAll('.persona-card').forEach(card => card.classList.remove('active'));
   document.getElementById(`persona-card-${personaId}`).classList.add('active');
 
-  // Update Active Header Info
   document.getElementById('header-avatar').src = p.avatar;
   document.getElementById('header-name').innerText = p.name;
   document.getElementById('header-status-text').innerText = p.status;
 
-  // Render timeline (either chat history or welcome screen)
   renderChatTimeline();
 
-  // Reset textarea height
   const chatInput = document.getElementById('chat-input');
   chatInput.value = '';
   chatInput.style.height = 'auto';
 
-  // Show Toast informing user of theme update
   showToast(`Switched to ${p.name}'s room`, 'info');
 }
 
-// Render Chat timeline depending on active persona's messages
 function renderChatTimeline() {
   const timeline = document.getElementById('chat-timeline');
   timeline.innerHTML = '';
@@ -205,7 +175,7 @@ function renderChatTimeline() {
   const messages = chatHistories[activePersona];
 
   if (messages.length === 0) {
-    // Show Welcome Screen
+
     const welcomeHTML = `
       <div class="welcome-container">
         <div class="welcome-logo-badge">
@@ -213,7 +183,7 @@ function renderChatTimeline() {
         </div>
         <h1 class="welcome-title">Chat with ${PERSONAS[activePersona].name}</h1>
         <p class="welcome-desc">${PERSONAS[activePersona].bio}</p>
-        
+
         <div class="chips-section">
           <h2 class="chips-title">Suggested questions to ask:</h2>
           <div class="chips-grid">
@@ -257,8 +227,8 @@ async function handleSendMessage() {
   chatInput.style.height = 'auto';
 
   // Check if API Key is configured
-  const currentKey = settings.provider === 'gemini' 
-    ? (GEMINI_API_KEY || settings.geminiKey) 
+  const currentKey = settings.provider === 'gemini'
+    ? (GEMINI_API_KEY || settings.geminiKey)
     : (OPENAI_API_KEY || settings.openaiKey);
   if (!currentKey) {
     // Append warning bubble and open settings
@@ -280,7 +250,7 @@ async function handleSendMessage() {
 
   try {
     const aiResponse = await callLLMAPI(text);
-    
+
     // Remove typing indicator
     typingIndicator.remove();
 
@@ -300,7 +270,7 @@ async function handleSendMessage() {
 // Append message bubble directly to DOM
 function appendBubbleToTimeline(role, text, shouldScroll = true) {
   const timeline = document.getElementById('chat-timeline');
-  
+
   // Remove welcome screen if it exists
   const welcome = timeline.querySelector('.welcome-container');
   if (welcome) welcome.remove();
@@ -406,18 +376,14 @@ function parseMarkdown(text) {
   // Inline code: `code`
   html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
 
-  // Bold: **text**
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-  // Italic: *text*
   html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
-  // Headers: ### text, ## text
   html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
   html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
   html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
-  // Handle unordered list lines
   const lines = html.split('\n');
   let inList = false;
   for (let i = 0; i < lines.length; i++) {
@@ -441,13 +407,11 @@ function parseMarkdown(text) {
   }
   html = lines.join('\n');
 
-  // Paragraph blocks
   html = html.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
 
   return html;
 }
 
-// Copy Code Block function
 window.copyToClipboard = function(button) {
   const codeBlock = button.closest('.code-block-wrapper').querySelector('code');
   if (codeBlock) {
@@ -465,7 +429,6 @@ window.copyToClipboard = function(button) {
   }
 };
 
-// Show temporary toast message
 function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');
   const toast = document.createElement('div');
@@ -473,7 +436,6 @@ function showToast(message, type = 'info') {
   toast.innerText = message;
   container.appendChild(toast);
 
-  // Auto remove toast after 3 seconds
   setTimeout(() => {
     toast.classList.add('fade-out');
     setTimeout(() => {
@@ -482,9 +444,8 @@ function showToast(message, type = 'info') {
   }, 3000);
 }
 
-// Call API depending on configurations (OpenAI or Gemini)
 async function callLLMAPI(promptText) {
-  // Select context history: rolling last 10 messages
+
   const rawHistory = chatHistories[activePersona];
   const conversationHistory = rawHistory.slice(-10);
 
@@ -497,17 +458,15 @@ async function callLLMAPI(promptText) {
   }
 }
 
-// Call Gemini API client-side
 async function callGeminiAPI(promptText, history, systemPrompt) {
   const apiKey = GEMINI_API_KEY || settings.geminiKey;
   const model = settings.geminiModel || 'gemini-2.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-  // Structure contents: Convert history to Gemini format (user vs model role)
   const contents = [];
 
   history.forEach(msg => {
-    // Map roles (Gemini expects user or model)
+
     const role = msg.role === 'user' ? 'user' : 'model';
     contents.push({
       role: role,
@@ -550,13 +509,11 @@ async function callGeminiAPI(promptText, history, systemPrompt) {
   }
 }
 
-// Call OpenAI API client-side
 async function callOpenAIAPI(promptText, history, systemPrompt) {
   const apiKey = OPENAI_API_KEY || settings.openaiKey;
   const model = settings.openaiModel || 'gpt-4o-mini';
   const url = 'https://api.openai.com/v1/chat/completions';
 
-  // Structure messages: Convert history to OpenAI format (system, user, assistant)
   const messages = [
     { role: 'system', content: systemPrompt }
   ];
