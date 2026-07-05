@@ -10,10 +10,16 @@ The app features custom design rooms for both educators (Warm Orange for Hitesh 
 
 Since this is a static frontend website, you can run it instantly without setting up any backend.
 
-1. **Download/Clone** the folder.
-2. Double-click `index.html` to open it in your browser (or use VS Code Live Server).
-3. Open **Settings** (gear icon, bottom-left sidebar) to paste your **Google Gemini API Key** (Recommended) or **OpenAI API Key**.
-4. Save configurations and select your educator from the sidebar to start chatting!
+### 🌟 Preconfigured Keys (Deployment Mode)
+If you have hardcoded your API keys at the top of [app.js](app.js):
+1. Double-click `index.html` to open the app.
+2. Select your educator and start chatting immediately! The application automatically detects and uses your preconfigured key.
+
+### 🔑 Manual Configuration
+If no keys are hardcoded:
+1. Double-click `index.html` to open the app.
+2. Click **Settings** (gear icon, bottom-left sidebar) to paste your **Google Gemini API Key** or **OpenAI API Key**.
+3. Save configurations and select your educator to start chatting!
 
 ---
 
