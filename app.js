@@ -298,7 +298,7 @@ function appendBubbleToTimeline(role, text, shouldScroll = true) {
 
   const isUser = role === 'user';
   const name = isUser ? 'You' : PERSONAS[activePersona].name;
-  const avatar = isUser ? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80' : PERSONAS[activePersona].avatar;
+  const avatar = isUser ? 'assets/user.png' : PERSONAS[activePersona].avatar;
 
   const row = document.createElement('div');
   row.className = `message-row ${isUser ? 'user' : 'ai'}`;
