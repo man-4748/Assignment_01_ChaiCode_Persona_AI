@@ -1,5 +1,12 @@
 // Main Application Logic for the AI Persona Chat Simulator
 
+// ==========================================
+// 🚀 DEPLOYMENT CONFIGURATIONS (Hardcode keys here)
+// ==========================================
+const GEMINI_API_KEY = ""; // Paste your Google Gemini API Key here
+const OPENAI_API_KEY = ""; // Paste your OpenAI API Key here
+// ==========================================
+
 // State variables
 let activePersona = 'hitesh';
 let chatHistories = {
@@ -250,7 +257,9 @@ async function handleSendMessage() {
   chatInput.style.height = 'auto';
 
   // Check if API Key is configured
-  const currentKey = settings.provider === 'gemini' ? settings.geminiKey : settings.openaiKey;
+  const currentKey = settings.provider === 'gemini' 
+    ? (GEMINI_API_KEY || settings.geminiKey) 
+    : (OPENAI_API_KEY || settings.openaiKey);
   if (!currentKey) {
     // Append warning bubble and open settings
     appendBubbleToTimeline('user', text, true);
@@ -490,7 +499,7 @@ async function callLLMAPI(promptText) {
 
 // Call Gemini API client-side
 async function callGeminiAPI(promptText, history, systemPrompt) {
-  const apiKey = settings.geminiKey;
+  const apiKey = GEMINI_API_KEY || settings.geminiKey;
   const model = settings.geminiModel || 'gemini-2.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
@@ -543,7 +552,7 @@ async function callGeminiAPI(promptText, history, systemPrompt) {
 
 // Call OpenAI API client-side
 async function callOpenAIAPI(promptText, history, systemPrompt) {
-  const apiKey = settings.openaiKey;
+  const apiKey = OPENAI_API_KEY || settings.openaiKey;
   const model = settings.openaiModel || 'gpt-4o-mini';
   const url = 'https://api.openai.com/v1/chat/completions';
 
