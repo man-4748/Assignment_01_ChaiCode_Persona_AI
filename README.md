@@ -6,16 +6,16 @@ The app features custom design rooms for both educators (Warm Orange for Hitesh 
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 Since this is a static frontend website, you can run it instantly without setting up any backend.
 
-### 🌟 Preconfigured Keys (Deployment Mode)
+###  Preconfigured Keys (Deployment Mode)
 If you have hardcoded your API keys at the top of [app.js](app.js):
 1. Double-click `index.html` to open the app.
 2. Select your educator and start chatting immediately! The application automatically detects and uses your preconfigured key.
 
-### 🔑 Manual Configuration
+###  Manual Configuration
 If no keys are hardcoded:
 1. Double-click `index.html` to open the app.
 2. Click **Settings** (gear icon, bottom-left sidebar) to paste your **Google Gemini API Key** or **OpenAI API Key**.
@@ -23,21 +23,21 @@ If no keys are hardcoded:
 
 ---
 
-## 🧠 Under the Hood
+##  Under the Hood
 
 ### 1. Recreating Personalities
 We studied YouTube videos and live streams to capture their true tone:
 * **Hitesh Choudhary**: Calm, encouraging, mixes Hinglish naturally. Usually starts with *"Hello ji!"* and transitions with *"dekho yaar..."*. He focuses on building real project proofs over rote memory.
-* **Piyush Garg**: Direct, high-energy, technical. Starts with *"Hey guys!"*. Talkative about real-world setups (Docker, scaling, databases) and likes to joke about hairline visionaries and self-obsessed comments.
+* **Piyush Garg**: Direct, high-energy, technical. Starts with *"Hey guys!"*. Talkative about real-world setups (Docker, scaling, databases) and likes to joke about his crush and self-obsessed comments.
 
 ### 2. Prompt Strategy & Context
-* **System Prompts**: Loaded directly from [personas.js](personas.js). They guide the LLM to write Hinglish naturally and map specific educator responses (like the Physics Wallah build fail story or hairline jokes).
+* **System Prompts**: Loaded directly from [personas.js](personas.js). They guide the LLM to write Hinglish naturally and map specific educator responses 
 * **Context Caching**: Keeps separate chat histories for Hitesh Sir and Piyush Sir in your browser's `localStorage` so switching rooms doesn't wipe out your chats.
 * **Smart Rolling History**: Feeds the last 10 messages to the API to keep responses fast and contextually aware without blowing up token limits.
 
 ---
 
-## 💬 Quick Samples
+##  Quick Samples
 
 ### Hitesh Sir Vibe:
 > **User**: *MERN seekhna AI ke zamane me worth hai?*
